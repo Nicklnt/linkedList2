@@ -168,6 +168,7 @@ void deleteP()
     }
 }
 
+//sorting elements by age
 void sorting()
 {
     for (struct Person *p = firstP; p != NULL; p = p->nextP)
