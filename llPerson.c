@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     firstP->prevP = NULL;
 
     lastP = firstP;
+    lastP->nextP = NULL;
 
     // variabels that control the switch
     char svar;
@@ -51,30 +52,30 @@ int main(int argc, char **argv)
 
         switch (svar)
         {
-            case '1':
-                addP();
-                break;
+        case '1':
+            addP();
+            break;
 
-            case '2':
-                addLastP();
-                break;
+        case '2':
+            addLastP();
+            break;
 
-            case '3':
-                printPer();
-                break;
+        case '3':
+            printPer();
+            break;
 
-            case '4':
-                deleteP();
-                break;
+        case '4':
+            deleteP();
+            break;
 
-            case '5':
-                sorting(); // doesn't work
-                break;
-            case '6':
-                exit = true;
-                break;
-            default:
-                printf("You choose a wrong option. Try again");
+        case '5':
+            sorting(); // doesn't work
+            break;
+        case '6':
+            exit = true;
+            break;
+        default:
+            printf("You choose a wrong option. Try again");
         }
 
     } while (exit == false);
@@ -167,34 +168,41 @@ void deleteP()
     }
 }
 
-// organize the element. Doesn't work
 void sorting()
 {
     for (struct Person *p = firstP; p != NULL; p = p->nextP)
     {
-        for (struct Person *q = firstP; q != NULL; q = q->nextP)
+
+        for (struct Person *q = p; q != NULL; q = q->nextP)
         {
 
             if (q->age > p->age)
             {
-                struct Person *Prev = q->prevP;
-                struct Person *Next = q->nextP;
-                if (Next != 0)
+                struct Person *qPrev = q->prevP;
+                struct Person *qNext = q->nextP;
+                struct Person *pNext = p->nextP;
+                struct Person *pPrev = p->prevP;
+
+                p->nextP = qNext;
+                q->prevP = pPrev;
+                p->prevP = q;
+                q->nextP = p;
+
+                if (pPrev != 0)
                 {
-                    q->prevP = p->prevP;
-                    q->nextP = p;
-                    p->prevP = q;
-                    p->nextP = Next;
-                    Next->prevP = p;
+                    pPrev->nextP = q;
                 }
-                else
+                if (qNext != 0)
                 {
-                    q->prevP = p->prevP;
-                    q->nextP = p;
-                    p->prevP = q;
-                    p->nextP = Next;
+                    qNext->prevP = p;
                 }
+
+                p = q;
             }
+        }
+        if (p->prevP == 0)
+        {
+            firstP = p;
         }
     }
 
